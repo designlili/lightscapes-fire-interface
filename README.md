@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="header.png" width="95%" />
+  <img src="header.png" width="100%" />
 </p>
 
 # ✶ Lightscapes – Fire Interface
