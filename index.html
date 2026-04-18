@@ -1,193 +1,298 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lightscapes – Fire Energy</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lightscapes – Fire Interface</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #060201;
+      font-family: Arial, sans-serif;
+    }
 
-html, body {
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#000;
-  font-family:Arial, sans-serif;
-}
+    body {
+      position: relative;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 120, 0, 0.12) 0%, transparent 35%),
+        radial-gradient(circle at 30% 70%, rgba(255, 40, 0, 0.10) 0%, transparent 25%),
+        radial-gradient(circle at 70% 25%, rgba(255, 210, 80, 0.08) 0%, transparent 20%),
+        #050201;
+    }
 
-canvas {
-  display:block;
-}
+    #art {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
 
-#art {
-  position:fixed;
-  inset:0;
-}
+    .overlay {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      z-index: 10;
+      max-width: 420px;
+      padding: 20px 22px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(255, 120, 0, 0.12);
+    }
 
-.overlay {
-  position:absolute;
-  top:25px;
-  left:25px;
-  padding:20px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 0 30px rgba(255,120,0,0.15);
-  z-index: 10;
-}
+    .overlay h1 {
+      color: #ffd39a;
+      font-size: 1.9rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 18px rgba(255, 150, 40, 0.35);
+    }
 
-.overlay h1 {
-  color:#ffcc88;
-  font-size:1.8rem;
-  text-shadow:0 0 20px rgba(255,140,0,0.6);
-}
+    .overlay p {
+      color: rgba(255,255,255,0.82);
+      line-height: 1.55;
+      font-size: 0.98rem;
+    }
 
-.overlay p {
-  margin-top:10px;
-  color:rgba(255,255,255,0.8);
-}
+    .signature {
+      margin-top: 12px;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.84rem;
+      letter-spacing: 0.04em;
+    }
 
-.mode {
-  position:absolute;
-  bottom:25px;
-  left:25px;
-  display:flex;
-  gap:10px;
-  z-index: 10;
-  flex-wrap: wrap;
-}
+    .controls {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-button {
-  padding:8px 14px;
-  border-radius:12px;
-  border:none;
-  background:rgba(255,255,255,0.08);
-  color:white;
-  cursor:pointer;
-  transition:0.3s;
-}
+    .controls button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.9);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
 
-button:hover {
-  background:rgba(255,140,0,0.4);
-}
-</style>
+    .controls button:hover {
+      transform: translateY(-1px);
+      background: rgba(255,140,0,0.22);
+      box-shadow: 0 0 20px rgba(255,120,0,0.18);
+    }
+
+    .hint {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      z-index: 10;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.72);
+      font-size: 0.9rem;
+      backdrop-filter: blur(8px);
+    }
+
+    @media (max-width: 700px) {
+      .overlay {
+        top: 16px;
+        left: 16px;
+        right: 16px;
+        max-width: none;
+      }
+
+      .controls {
+        left: 16px;
+        bottom: 16px;
+        right: 16px;
+      }
+
+      .hint {
+        display: none;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="overlay">
+    <h1>Lightscapes</h1>
+    <p>
+      A living fire-inspired interface where movement becomes glowing energy.
+      Explore calm, flow, intensity and chaos through light.
+    </p>
+    <div class="signature">Interactive digital artwork</div>
+  </div>
 
-<div class="overlay">
-  <h1>Lightscapes</h1>
-  <p>Fire Energy Interface</p>
-</div>
+  <div class="controls">
+    <button onclick="setMode('calm')">Calm</button>
+    <button onclick="setMode('flow')">Flow</button>
+    <button onclick="setMode('energy')">Energy</button>
+    <button onclick="setMode('chaos')">Chaos</button>
+  </div>
 
-<div class="mode">
-  <button onclick="setMode('calm')">Calm</button>
-  <button onclick="setMode('flow')">Flow</button>
-  <button onclick="setMode('energy')">Energy</button>
-  <button onclick="setMode('chaos')">Chaos</button>
-</div>
+  <div class="hint">Move slowly for soft trails · click for bursts ✦</div>
 
-<canvas id="art"></canvas>
+  <canvas id="art"></canvas>
 
-<script>
-const canvas = document.getElementById("art");
-const ctx = canvas.getContext("2d");
+  <script>
+    const canvas = document.getElementById("art");
+    const ctx = canvas.getContext("2d");
 
-let w = canvas.width = window.innerWidth;
-let h = canvas.height = window.innerHeight;
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
 
-let particles = [];
-let mode = "flow";
+    let particles = [];
+    let mode = "flow";
 
-window.addEventListener("resize", () => {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
-});
-
-function setMode(m) {
-  mode = m;
-}
-
-class Particle {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.vx = (Math.random()-0.5)*2;
-    this.vy = (Math.random()-0.5)*2;
-    this.life = 200;
-    this.hue = Math.random()*40;
-    this.size = Math.random()*5 + 2;
-  }
-
-  update() {
-    if(mode==="calm") {
-      this.vx *= 0.98;
-      this.vy *= 0.98;
+    function resizeCanvas() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     }
 
-    if(mode==="energy") {
-      this.vx *= 1.02;
-      this.vy *= 1.02;
+    window.addEventListener("resize", resizeCanvas);
+
+    function setMode(newMode) {
+      mode = newMode;
     }
 
-    if(mode==="chaos") {
-      this.vx += (Math.random()-0.5)*0.5;
-      this.vy += (Math.random()-0.5)*0.5;
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+
+        this.vx = (Math.random() - 0.5) * 2.2;
+        this.vy = (Math.random() - 0.5) * 2.2;
+
+        this.life = 220 + Math.random() * 60;
+        this.size = Math.random() * 5 + 2;
+
+        this.hue = Math.random() * 45; // rot-gelb-gold
+        this.alpha = 0.9;
+      }
+
+      update() {
+        if (mode === "calm") {
+          this.vx *= 0.985;
+          this.vy *= 0.985;
+        }
+
+        if (mode === "flow") {
+          this.vx += Math.sin(this.y * 0.01) * 0.01;
+          this.vy += Math.cos(this.x * 0.01) * 0.01;
+          this.vx *= 0.995;
+          this.vy *= 0.995;
+        }
+
+        if (mode === "energy") {
+          this.vx *= 1.01;
+          this.vy *= 1.01;
+        }
+
+        if (mode === "chaos") {
+          this.vx += (Math.random() - 0.5) * 0.25;
+          this.vy += (Math.random() - 0.5) * 0.25;
+        }
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        this.life -= 1;
+        this.size *= 0.992;
+        this.alpha *= 0.996;
+      }
+
+      draw() {
+        const color = `hsla(${this.hue}, 100%, 60%, ${this.alpha})`;
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.shadowBlur = 28;
+        ctx.shadowColor = color;
+        ctx.fill();
+      }
+
+      isDead() {
+        return this.life <= 0 || this.size < 0.2 || this.alpha < 0.03;
+      }
     }
 
-    this.x += this.vx;
-    this.y += this.vy;
-    this.life--;
-    this.size *= 0.99;
-  }
-
-  draw() {
-    const color = `hsla(${this.hue},100%,60%,0.8)`;
-    ctx.beginPath();
-    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-    ctx.fillStyle = color;
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = color;
-    ctx.fill();
-  }
-}
-
-function addParticles(x,y) {
-  for(let i=0;i<8;i++) {
-    particles.push(new Particle(x,y));
-  }
-}
-
-window.addEventListener("mousemove", e => {
-  addParticles(e.clientX,e.clientY);
-});
-
-window.addEventListener("click", e => {
-  for(let i=0;i<30;i++) {
-    particles.push(new Particle(e.clientX,e.clientY));
-  }
-});
-
-function animate() {
-  ctx.fillStyle="rgba(0,0,0,0.05)";
-  ctx.fillRect(0,0,w,h);
-
-  for(let i=particles.length-1;i>=0;i--) {
-    particles[i].update();
-    particles[i].draw();
-
-    if(particles[i].life<=0 || particles[i].size < 0.2) {
-      particles.splice(i,1);
+    function addParticles(x, y, amount = 8) {
+      for (let i = 0; i < amount; i++) {
+        particles.push(new Particle(x, y));
+      }
     }
-  }
 
-  requestAnimationFrame(animate);
-}
+    window.addEventListener("mousemove", (e) => {
+      addParticles(e.clientX, e.clientY, 9);
+    });
 
-animate();
-</script>
+    window.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      addParticles(touch.clientX, touch.clientY, 10);
+    }, { passive: false });
 
+    window.addEventListener("click", (e) => {
+      addParticles(e.clientX, e.clientY, 40);
+    });
+
+    function connectParticles() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 110) {
+            const alpha = (1 - dist / 110) * 0.08;
+            const hue = (particles[i].hue + particles[j].hue) / 2;
+
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `hsla(${hue}, 100%, 60%, ${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.shadowBlur = 16;
+            ctx.shadowColor = `hsla(${hue}, 100%, 60%, ${alpha})`;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(5, 2, 1, 0.06)";
+      ctx.fillRect(0, 0, w, h);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+
+        if (particles[i].isDead()) {
+          particles.splice(i, 1);
+        }
+      }
+
+      connectParticles();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
 </body>
 </html>
