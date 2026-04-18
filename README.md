@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://via.placeholder.com/1200x500/120503/ffb347?text=Lightscapes+Fire+Interface" width="90%" />
+  <img src="header.png" width="90%" />
 </p>
 
 # ✶ Lightscapes – Fire Interface
