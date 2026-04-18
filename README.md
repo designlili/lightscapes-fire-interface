@@ -35,9 +35,9 @@ Mouse movement generates living particles in shades of red, orange, gold and yel
 ## ✦ Visual Impressions
 
 <p align="center">
-  <img src="preview1.png" width="30%" />
-  <img src="preview2.png" width="30%" />
-  <img src="detail.png" width="30%" />
+  <img src="preview1.png" style="width:32%; height:180px; object-fit:cover; border-radius:10px;" />
+  <img src="preview2.png" style="width:32%; height:180px; object-fit:cover; border-radius:10px;" />
+  <img src="detail.png" style="width:32%; height:180px; object-fit:cover; border-radius:10px;" />
 </p>
 
 
