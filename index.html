@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lightscapes – Fire Energy</title>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  font-family:Arial, sans-serif;
+}
+
+canvas {
+  display:block;
+}
+
+#art {
+  position:fixed;
+  inset:0;
+}
+
+.overlay {
+  position:absolute;
+  top:25px;
+  left:25px;
+  padding:20px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 0 30px rgba(255,120,0,0.15);
+  z-index: 10;
+}
+
+.overlay h1 {
+  color:#ffcc88;
+  font-size:1.8rem;
+  text-shadow:0 0 20px rgba(255,140,0,0.6);
+}
+
+.overlay p {
+  margin-top:10px;
+  color:rgba(255,255,255,0.8);
+}
+
+.mode {
+  position:absolute;
+  bottom:25px;
+  left:25px;
+  display:flex;
+  gap:10px;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+
+button {
+  padding:8px 14px;
+  border-radius:12px;
+  border:none;
+  background:rgba(255,255,255,0.08);
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover {
+  background:rgba(255,140,0,0.4);
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+  <h1>Lightscapes</h1>
+  <p>Fire Energy Interface</p>
+</div>
+
+<div class="mode">
+  <button onclick="setMode('calm')">Calm</button>
+  <button onclick="setMode('flow')">Flow</button>
+  <button onclick="setMode('energy')">Energy</button>
+  <button onclick="setMode('chaos')">Chaos</button>
+</div>
+
+<canvas id="art"></canvas>
+
+<script>
+const canvas = document.getElementById("art");
+const ctx = canvas.getContext("2d");
+
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+
+let particles = [];
+let mode = "flow";
+
+window.addEventListener("resize", () => {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+});
+
+function setMode(m) {
+  mode = m;
+}
+
+class Particle {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.vx = (Math.random()-0.5)*2;
+    this.vy = (Math.random()-0.5)*2;
+    this.life = 200;
+    this.hue = Math.random()*40;
+    this.size = Math.random()*5 + 2;
+  }
+
+  update() {
+    if(mode==="calm") {
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+    }
+
+    if(mode==="energy") {
+      this.vx *= 1.02;
+      this.vy *= 1.02;
+    }
+
+    if(mode==="chaos") {
+      this.vx += (Math.random()-0.5)*0.5;
+      this.vy += (Math.random()-0.5)*0.5;
+    }
+
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life--;
+    this.size *= 0.99;
+  }
+
+  draw() {
+    const color = `hsla(${this.hue},100%,60%,0.8)`;
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.shadowBlur = 25;
+    ctx.shadowColor = color;
+    ctx.fill();
+  }
+}
+
+function addParticles(x,y) {
+  for(let i=0;i<8;i++) {
+    particles.push(new Particle(x,y));
+  }
+}
+
+window.addEventListener("mousemove", e => {
+  addParticles(e.clientX,e.clientY);
+});
+
+window.addEventListener("click", e => {
+  for(let i=0;i<30;i++) {
+    particles.push(new Particle(e.clientX,e.clientY));
+  }
+});
+
+function animate() {
+  ctx.fillStyle="rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,w,h);
+
+  for(let i=particles.length-1;i>=0;i--) {
+    particles[i].update();
+    particles[i].draw();
+
+    if(particles[i].life<=0 || particles[i].size < 0.2) {
+      particles.splice(i,1);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
